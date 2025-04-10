@@ -9,6 +9,7 @@ require (
 	chainguard.dev/sdk v0.1.32
 	cloud.google.com/go/kms v1.21.1
 	cloud.google.com/go/secretmanager v1.14.6
+	github.com/aws/aws-sdk-go-v2/service/kms v1.38.2
 	github.com/bradleyfalzon/ghinstallation/v2 v2.14.0
 	github.com/chainguard-dev/clog v1.7.0
 	github.com/chainguard-dev/terraform-infra-common v0.6.132
@@ -34,6 +35,10 @@ require (
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp v1.27.0 // indirect
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.27.0 // indirect
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.51.0 // indirect
+	github.com/aws/aws-sdk-go-v2 v1.36.3 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.34 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.34 // indirect
+	github.com/aws/smithy-go v1.22.3 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/ebitengine/purego v0.8.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
