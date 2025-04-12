@@ -9,8 +9,10 @@ import (
 	"strings"
 
 	kmsGCP "cloud.google.com/go/kms/apiv1"
+	"github.com/aws/aws-sdk-go-v2/config"
 	kmsAWS "github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/bradleyfalzon/ghinstallation/v2"
+	"github.com/octo-sts/app/pkg/awskms"
 	"github.com/octo-sts/app/pkg/gcpkms"
 )
 
@@ -47,7 +49,13 @@ func NewKMS(ctx context.Context, provider, kmsKey string) (KMS, error) {
 		kmsClient.gcpClient = gcpClient
 		return kmsClient, nil
 	case AWS:
-		return nil, errors.New("not implemented")
+		awsConfig, err := config.LoadDefaultConfig(ctx)
+		if err != nil {
+			return nil, err
+		}
+		client := kmsAWS.NewFromConfig(awsConfig)
+		kmsClient.awsClient = client
+		return kmsClient, nil
 	default:
 		return nil, errors.New("unsupported kms provider")
 	}
@@ -58,7 +66,7 @@ func (k *kmsProvider) NewSigner() (ghinstallation.Signer, error) {
 	case GCP:
 		return gcpkms.New(k.ctx, k.gcpClient, k.kmsKey)
 	case AWS:
-		return nil, errors.New("not implemented")
+		return awskms.New(k.ctx, k.awsClient, k.kmsKey)
 	default:
 		return nil, errors.New("unsupported kms provider")
 	}
