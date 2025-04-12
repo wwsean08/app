@@ -48,7 +48,7 @@ func main() {
 	var kmsClient kms.KMS
 
 	if baseCfg.KMSKey != "" {
-		kmsClient, err = kms.NewKMS(ctx, baseCfg.KMSProver, baseCfg.KMSKey)
+		kmsClient, err = kms.NewKMS(ctx, baseCfg.KMSProvider, baseCfg.KMSKey)
 		if err != nil {
 			log.Panicf("could not create kms client: %v", err)
 		}

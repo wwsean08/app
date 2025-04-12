@@ -36,11 +36,11 @@ func TestGCPKMS(t *testing.T) {
 	t.Setenv("GOOGLE_APPLICATION_CREDENTIALS", credsFile)
 
 	testConfig := &envconfig.EnvConfig{
-		Port:      8080,
-		AppID:     123456,
-		KMSKey:    "test-kms-key",
-		KMSProver: "gcp",
-		Metrics:   true,
+		Port:        8080,
+		AppID:       123456,
+		KMSKey:      "test-kms-key",
+		KMSProvider: "gcp",
+		Metrics:     true,
 	}
 	provider := testKMSSigner{
 		t:   t,
