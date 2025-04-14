@@ -39,7 +39,6 @@ func (s *signingMethodAWS) Sign(signingString string, ikey interface{}) (string,
 	if err != nil {
 		return "", err
 	}
-
 	return base64.RawURLEncoding.EncodeToString(resp.Signature), nil
 }
 
