@@ -17,6 +17,7 @@ import (
 )
 
 type signingMethodAWS struct {
+	ctx    context.Context
 	client *kms.Client
 }
 
@@ -25,14 +26,11 @@ func (s *signingMethodAWS) Verify(signingString, signature string, key interface
 }
 
 func (s *signingMethodAWS) Sign(signingString string, ikey interface{}) (string, error) {
-	println(signingString)
-	ctx := context.Background()
-
 	key, ok := ikey.(string)
 	if !ok {
 		return "", fmt.Errorf("invalid key reference type: %T", ikey)
 	}
-	resp, err := s.client.Sign(ctx, &kms.SignInput{
+	resp, err := s.client.Sign(s.ctx, &kms.SignInput{
 		KeyId:            aws.String(key),
 		Message:          []byte(signingString),
 		MessageType:      types.MessageTypeRaw,
@@ -42,8 +40,7 @@ func (s *signingMethodAWS) Sign(signingString string, ikey interface{}) (string,
 		return "", err
 	}
 
-	println(base64.RawURLEncoding.EncodeToString(resp.Signature))
-	return base64.RawURLEncoding.EncodeToString(resp.Signature), errors.New("not implemented")
+	return base64.RawURLEncoding.EncodeToString(resp.Signature), nil
 }
 
 func (s *signingMethodAWS) Alg() string {
@@ -51,12 +48,14 @@ func (s *signingMethodAWS) Alg() string {
 }
 
 type awsSigner struct {
+	ctx    context.Context
 	client *kms.Client
 	key    string
 }
 
-func New(_ context.Context, client *kms.Client, key string) (ghinstallation.Signer, error) {
+func New(ctx context.Context, client *kms.Client, key string) (ghinstallation.Signer, error) {
 	return &awsSigner{
+		ctx:    ctx,
 		client: client,
 		key:    key,
 	}, nil
@@ -64,6 +63,7 @@ func New(_ context.Context, client *kms.Client, key string) (ghinstallation.Sign
 
 func (s *awsSigner) Sign(claims jwt.Claims) (string, error) {
 	method := &signingMethodAWS{
+		ctx:    s.ctx,
 		client: s.client,
 	}
 	return jwt.NewWithClaims(method, claims).SignedString(s.key)
